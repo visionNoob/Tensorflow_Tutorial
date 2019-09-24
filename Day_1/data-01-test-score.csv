@@ -1,25 +1,351 @@
-73,80,75,152
-93,88,93,185
-89,91,90,180
-96,98,100,196
-73,66,70,142
-53,46,55,101
-69,74,77,149
-47,56,60,115
-87,79,90,175
-79,70,88,164
-69,70,73,141
-70,65,74,141
-93,95,91,184
-79,80,73,152
-70,73,78,148
-93,89,96,192
-78,75,68,147
-81,90,93,183
-88,92,86,177
-78,83,77,159
-82,86,90,177
-86,82,89,175
-78,83,85,175
-76,83,71,149
-96,93,95,192
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "연습문제 1 - Score Prediction.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.7.3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/visionNoob/Tensorflow_Tutorial/blob/master/Day_1/data-01-test-score.csv\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Edvidmv0NEde",
+        "colab_type": "text"
+      },
+      "source": [
+        "# Score prediction\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PIjX6z2kNHxc",
+        "colab_type": "code",
+        "outputId": "8004750b-5369-412c-e738-2cdd266c5417",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 377
+        }
+      },
+      "source": [
+        "!wget \"https://www.dropbox.com/s/stjfjc0ercq0jc1/data-01-test-score.csv\""
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "--2019-09-24 22:55:39--  https://www.dropbox.com/s/stjfjc0ercq0jc1/data-01-test-score.csv?dl=0\n",
+            "Resolving www.dropbox.com (www.dropbox.com)... 162.125.1.1, 2620:100:601b:1::a27d:801\n",
+            "Connecting to www.dropbox.com (www.dropbox.com)|162.125.1.1|:443... connected.\n",
+            "HTTP request sent, awaiting response... 301 Moved Permanently\n",
+            "Location: /s/raw/stjfjc0ercq0jc1/data-01-test-score.csv [following]\n",
+            "--2019-09-24 22:55:39--  https://www.dropbox.com/s/raw/stjfjc0ercq0jc1/data-01-test-score.csv\n",
+            "Reusing existing connection to www.dropbox.com:443.\n",
+            "HTTP request sent, awaiting response... 302 Found\n",
+            "Location: https://uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com/cd/0/inline/ApOXN8Z-yuymouBhs8XVTHnYB3KEm5BwGVbKkG0r8Yfne-hV6HrrwqJxzxTE41RmlE5cuDNNgZei_Ta3wg5NQwrf_cKM0uj1bL8-xdVsYbadEyNGpkSpSlaEev0AtBY-mU8/file# [following]\n",
+            "--2019-09-24 22:55:39--  https://uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com/cd/0/inline/ApOXN8Z-yuymouBhs8XVTHnYB3KEm5BwGVbKkG0r8Yfne-hV6HrrwqJxzxTE41RmlE5cuDNNgZei_Ta3wg5NQwrf_cKM0uj1bL8-xdVsYbadEyNGpkSpSlaEev0AtBY-mU8/file\n",
+            "Resolving uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com (uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com)... 162.125.1.6, 2620:100:601b:6::a27d:806\n",
+            "Connecting to uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com (uc80aee688b6f15dc1531ffac012.dl.dropboxusercontent.com)|162.125.1.6|:443... connected.\n",
+            "HTTP request sent, awaiting response... 200 OK\n",
+            "Length: 349 [text/plain]\n",
+            "Saving to: ‘data-01-test-score.csv?dl=0’\n",
+            "\n",
+            "\r          data-01-t   0%[                    ]       0  --.-KB/s               \rdata-01-test-score. 100%[===================>]     349  --.-KB/s    in 0s      \n",
+            "\n",
+            "2019-09-24 22:55:39 (45.6 MB/s) - ‘data-01-test-score.csv?dl=0’ saved [349/349]\n",
+            "\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "ENBsugN3Z25Z",
+        "outputId": "6fbd2a33-8718-4775-9fa7-31eb10eedbfb",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 34
+        }
+      },
+      "source": [
+        "import tensorflow as tf\n",
+        "import tensorflow.contrib.eager as tfe\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "tf.enable_eager_execution()\n",
+        "tf.__version__"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'1.14.0'"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 2
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "WqAA-aDGNEdj",
+        "colab_type": "text"
+      },
+      "source": [
+        "## Setting Data\n",
+        "* 데이터를 불러와봅시다."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "8tyyJQoVZtv6",
+        "outputId": "1c729e57-37cd-4c47-d0fc-72e74bbdd818",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 395
+        }
+      },
+      "source": [
+        "xy = np.loadtxt('./data-01-test-score.csv', delimiter=',', dtype=np.float32)\n",
+        "\n",
+        "x_train = xy[:, 0:-1]\n",
+        "y_train = xy[:, [-1]]\n",
+        "\n",
+        "print(x_train.shape, y_train.shape)\n"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "OSError",
+          "evalue": "ignored",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mOSError\u001b[0m                                   Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-3-97766c7f8919>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mxy\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mloadtxt\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'./data-01-test-score.csv'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdelimiter\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m','\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdtype\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfloat32\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0mx_train\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mxy\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0my_train\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mxy\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.6/dist-packages/numpy/lib/npyio.py\u001b[0m in \u001b[0;36mloadtxt\u001b[0;34m(fname, dtype, comments, delimiter, converters, skiprows, usecols, unpack, ndmin, encoding, max_rows)\u001b[0m\n\u001b[1;32m    960\u001b[0m             \u001b[0mfname\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mos_fspath\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    961\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0m_is_string_like\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 962\u001b[0;31m             \u001b[0mfh\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mlib\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_datasource\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mopen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfname\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'rt'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mencoding\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mencoding\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    963\u001b[0m             \u001b[0mfencoding\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mgetattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfh\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'encoding'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'latin1'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    964\u001b[0m             \u001b[0mfh\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0miter\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfh\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.6/dist-packages/numpy/lib/_datasource.py\u001b[0m in \u001b[0;36mopen\u001b[0;34m(path, mode, destpath, encoding, newline)\u001b[0m\n\u001b[1;32m    264\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    265\u001b[0m     \u001b[0mds\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mDataSource\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdestpath\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 266\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0mds\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mopen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpath\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmode\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mencoding\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mencoding\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnewline\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mnewline\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    267\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    268\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.6/dist-packages/numpy/lib/_datasource.py\u001b[0m in \u001b[0;36mopen\u001b[0;34m(self, path, mode, encoding, newline)\u001b[0m\n\u001b[1;32m    622\u001b[0m                                       encoding=encoding, newline=newline)\n\u001b[1;32m    623\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 624\u001b[0;31m             \u001b[0;32mraise\u001b[0m \u001b[0mIOError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"%s not found.\"\u001b[0m \u001b[0;34m%\u001b[0m \u001b[0mpath\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    625\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    626\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mOSError\u001b[0m: ./data-01-test-score.csv not found."
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "i2tA-b2CNEdm",
+        "colab_type": "text"
+      },
+      "source": [
+        "## make a dataset"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "kOM7rsEpNEdn",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        "dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(len(x_train))\n"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "t4DwVZEsNEdp",
+        "colab_type": "text"
+      },
+      "source": [
+        "# 가설 설정"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "yy6hZwGy45kO",
+        "colab": {}
+      },
+      "source": [
+        "W = tf.Variable(tf.random_normal(# TODO), name='weight')\n",
+        "b = tf.Variable(tf.random_normal(# TODO), name='bias')\n",
+        "\n",
+        "print(W,b)\n"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "22WmI9ygawt_",
+        "colab": {}
+      },
+      "source": [
+        "def linear_regression(features):\n",
+        "    hypothesis  = # TODO\n",
+        "    return hypothesis\n",
+        "  \n",
+        "print(linear_regression(x_train))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "PWJiXQCrNEdu",
+        "colab_type": "text"
+      },
+      "source": [
+        "# cost 함수 설정\n",
+        "\n",
+        "\n",
+        "$$ cost(W)=\\frac { 1 }{ m } \\sum _{i=1}^{m}{ { ({ H(x_{ i }) }-y_{ i } })^{ 2 } }  $$"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "RY6ssJoXarTa",
+        "colab": {}
+      },
+      "source": [
+        "def loss_fn(hypothesis, labels):\n",
+        "    cost = # TODO\n",
+        "    return cost\n",
+        "\n",
+        "optimizer = tf.train.GradientDescentOptimizer(learning_rate=# TODO)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "yA290eVLNEdx",
+        "colab_type": "text"
+      },
+      "source": [
+        "# 학습"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "wo2YiZdYaEQw",
+        "colab": {}
+      },
+      "source": [
+        "epochs = 5000\n",
+        "\n",
+        "for step in range(epochs):\n",
+        "  for features, labels in dataset:\n",
+        "    with tf.GradientTape() as tape:\n",
+        "      # TODO\n",
+        "      loss_value = \n",
+        "      grads = \n",
+        "      optimizer.apply_gradients(grads_and_vars=zip(grads,[W,b]))\n",
+        "      if step % 100 == 0:\n",
+        "            print(\"Iter: {}, Loss: {:.4f}\".format(step, loss_fn(linear_regression(features),labels)))"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "Fu1S6WVm4M1Y",
+        "colab": {}
+      },
+      "source": [
+        "print(W, b)"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "cUJviOQ_aGVH",
+        "colab": {}
+      },
+      "source": [
+        "hypothesis= linear_regression(x_train)\n",
+        "\n",
+        "plt.plot(y_train, 'o-', color='red')\n",
+        "plt.plot(hypothesis.numpy(), 'o-', color='blue')\n",
+        "plt.show()"
+      ],
+      "execution_count": 0,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab_type": "code",
+        "id": "4mazQlt-ai-P",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}
